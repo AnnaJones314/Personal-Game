@@ -7,20 +7,23 @@ public class Player : MonoBehaviour
 {
 
     [SerializeField] private GameInput gameInput;
-    private Rigidbody rb;
+    private Rigidbody playerRigidBody;
     private float moveSpeed = 7f;
 
 
     void Awake()
     {
         gameInput.OnJumpPerformed += GameInput_OnJumpPerformed;
-        rb = GetComponent<Rigidbody>();
+        playerRigidBody = GetComponent<Rigidbody>();
 
     }
 
     private void GameInput_OnJumpPerformed(object sender, EventArgs e)
     {
-        rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+        if(playerRigidBody.position.y !> 0)
+        {
+            playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+        }
     }
 
     // Update is called once per frame
@@ -29,6 +32,7 @@ public class Player : MonoBehaviour
         HandleMovement();
         //funky workaround to make sure capsule never falls over
         transform.rotation = new Quaternion(0,0,0,1);
+        
     }
 
     private void HandleMovement()
@@ -38,6 +42,5 @@ public class Player : MonoBehaviour
         float moveDistance = moveSpeed * Time.deltaTime;
         transform.position += moveDistance * moveDir;
 
-        
     }
 }
